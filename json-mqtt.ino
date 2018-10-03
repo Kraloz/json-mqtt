@@ -63,31 +63,23 @@ void setup()
   delay(1500);
 }
 
-
 void loop()
 {
   if (!client.connected()) {
     reconnect();    
-  }else{
-
+  }
+  else{
     char json[256];
-
-    // JSON_ARRAY_SIZE(n)
-    // n*JSON_OBJECT_SIZE(2)
-    // SIENDO n = CANTIDAD DE OBJETOS DENTRO DEL ARRAY  
-    const size_t bufferSize = JSON_ARRAY_SIZE(2) + 2*JSON_OBJECT_SIZE(2);
+      
+    // JSON_OBJECT_SIZE(n)
+    // SIENDO N LA CANTIDAD DE ATRIBUTOS DEL JSON
+    const size_t bufferSize = JSON_OBJECT_SIZE(2);
     DynamicJsonBuffer jsonBuffer(bufferSize);
-    
-    JsonArray& root = jsonBuffer.createArray();
-    
-    JsonObject& root_0 = root.createNestedObject();
-    root_0["id"] = 1;
-    root_0["valor"] = analogRead(pinRandom1);
-    
-    JsonObject& root_1 = root.createNestedObject();
-    root_1["id"] = 2;
-    root_1["valor"] = analogRead(pinRandom2);
 
+    JsonObject& root = jsonBuffer.createObject();
+    root["id"] = 1;
+    root["valor"] = analogRead(pinRandom1);
+   
     root.printTo(json, sizeof(json));   
         
     client.publish("/test",json);
